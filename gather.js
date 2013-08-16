@@ -1,17 +1,18 @@
-var config = require("./Config")
-var http = require("http");
-var url_util = require("url");
-var parser = require("./Parser");
+var Config = require("./Config")
+var Http = require("http");
+var Url = require("url");
 
 var Gather = {
     get : function(parse_f, hostname, path, method, port){
+        if(!path) 
+            path = '';
         if(!port) 
             port = '80';
         if(!method)
             method = "GET";
 
-        var index = Math.floor(Math.random()*1000 % config.ua.length);
-        var ua = config.ua[index];
+        var index = Math.floor(Math.random()*1000 % Config.ua.length);
+        var ua = Config.ua[index];
         var options = {
             hostname : hostname,
             port : port,
@@ -22,7 +23,7 @@ var Gather = {
             method : method
         };
 
-        var req = http.request(options, function(res){
+        var req = Http.request(options, function(res){
             console.log(options['hostname'] + options['path'] + ' : ' + res.statusCode);
 
 //            timeout = setTimeout(function() {
@@ -47,10 +48,9 @@ var Gather = {
         req.end();
     },
     get_url : function(parser_f, url, method){
-        var url_info = url_util.parse(url);
+        var url_info = Url.parse(url);
         this.get(parser_f, url_info["host"], url_info["path"],method, url_info["port"]);
     }
 };
 
-Gather.get(parser.parse, "guoku.com","/selected/");
-//Gather.get_url(parser.parse, "http://guoku.com/selected/");
+module.exports = Gather;
