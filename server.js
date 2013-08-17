@@ -1,7 +1,13 @@
-var http = require("http");
+var Express = require("express");
+var Hatchery = require("./Hatchery");
 
-http.createServer(function(request, response) {
-    response.writeHead(200, {"Content-Type":"text/plain"});
-    response.write("hello world");
-    response.end();
-}).listen(8080);
+var app = Express();
+app.listen(8080);
+
+app.get("/new/shop", function(req, res){
+    var id = req.param("id");
+    var hatchery = new Hatchery(); 
+    hatchery.tasks.shop.push(id);
+    console.log(hatchery.tasks.shop);
+    res.send("recived");
+});

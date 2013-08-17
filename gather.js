@@ -1,27 +1,26 @@
 var Config = require("./Config")
 var Http = require("http");
 var Url = require("url");
+var $ = require("jQuery");
 
 var Gather = {
-    get : function(parse_f, hostname, path, method, port){
-        if(!path) 
-            path = '';
-        if(!port) 
-            port = '80';
-        if(!method)
-            method = "GET";
-
+    get : function(parse_f, options, callback){
+        if (options.url){
+            var url_info = Url.parse(options.url);
+            options.hostname = url_info.hostname;
+            options.path = url_info.path?url_info.path:"";
+            options.port = url_info.port?url_info.port:"";
+        }
+        
         var index = Math.floor(Math.random()*1000 % Config.ua.length);
         var ua = Config.ua[index];
-        var options = {
-            hostname : hostname,
-            port : port,
-            path : path,
+
+        var options = $.extend({
             headers: {
                 "User-Agent" : ua
             },
-            method : method
-        };
+            method : "GET"
+        }, options);
 
         var req = Http.request(options, function(res){
             console.log(options['hostname'] + options['path'] + ' : ' + res.statusCode);
@@ -39,17 +38,13 @@ var Gather = {
                 buffers.push(b);
             }).on('end', function(){
                 var html = Buffer.concat(buffers).toString();
-                parse_f(html);
+                parse_f(html, callback);
             }).on('error', function(err) {
                 clearTimeout(response_timeout);
                 console.error(err);
             });
         });
         req.end();
-    },
-    get_url : function(parser_f, url, method){
-        var url_info = Url.parse(url);
-        this.get(parser_f, url_info["host"], url_info["path"],method, url_info["port"]);
     }
 };
 

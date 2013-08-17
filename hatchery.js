@@ -1,5 +1,5 @@
 var Drone = require("./Drone");
-var Overlord = require("./Overlord");
+var MineralField = require("./MineralField");
 
 var Hatchery = function(){
     return _hatchery.get();
@@ -9,31 +9,54 @@ var _hatchery = {
     obj : null,
     init : function(){
         this.obj = {
+            state   : "free",
             support : 0,
-            create_overlord : function(){
-                var overlord = new Overlord();
-                return overlord;
+            tasks   : {
+                shop : [],
+                item : [],
+                url  : []
             },
-            create_drone : function(options){
-                var drone = new Drone(options);
+            create_drone : function(options, callback){
+                var drone = new Drone(options, callback);
                 this.support++;
                 return drone;
             },
             kill_drone : function(drone){
                 this.support--;
+                drone = null;
+            },
+            dominate_mf: function(options){
+                var mf = new MineralField(options);
+                var mf_location = mf.get_location()
+                var drone = this.create_drone(mf_location, function(data){
+                    mf.update(data);
+                });
+                drone.work();
+
+                return mf;
+            },
+            hatch : function(){
+                this.state = "hatching";
+                var hatchery = this;
+                setInterval(function(){
+                    if(hatchery.tasks.shop.length > 0){
+                        var shop_id = hatchery.tasks.shop.shift();
+                        hatchery.dominate_mf({
+                            shop_id : shop_id
+                        });
+                    }
+                }, 1000);
             }
         };
     },
     get : function(){
         if (!this.obj) 
             this.init();
+        if (this.obj.state == "free")
+            this.obj.hatch();
 
         return this.obj;
     }
 };
-
-hatchery = new Hatchery();
-var drone = hatchery.create_drone({url:"http://pc-trend.taobao.com/search.htm?spm=a1z10.3.w1017-2942140716.79.KI2EZX&search=y&viewType=grid&orderType=_hotsell&pageNum=1#anchor", type:"taobao_shop"});
-drone.work();
 
 module.exports = Hatchery;

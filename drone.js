@@ -1,32 +1,24 @@
 var Gather = require("./Gather");
 var Parser = require("./Parser");
-var $ = require("jQuery");
+var Hatchery = require("./Hatchery");
 
-var Drone = function(options){
-    var _drone = $.extend({
-        type : "",
-        url  : "",
-        host : "",
-        path : "",
-        port : "",
-        method  : "",
-    },options);
+var Drone = function(options, callback){
+    var _drone = {};
 
+    _drone.options = options;
     _drone.get_parser = function(){
-        if(this.type=="taobao_shop")
+        if(this.options.type=="taobao_shop")
             return Parser.parse_taobao_shop;
         return null;
     };
     _drone.work = function(){
         var parser = this.get_parser();
         if(!parser){
-            hatchery.kill_drone(this);
+//            var hatchery = new Hatchery();
+//            hatchery.kill_drone(this);
             return false;
         }
-        if(this.host)
-            Gather.get(parser, this.host, this.path, this.method, this.port);
-        else if(this.url)
-            Gather.get_url(parser, this.url, this.method);
+        Gather.get(parser, this.options, callback);
     };
 
     return _drone;
