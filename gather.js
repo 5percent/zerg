@@ -40,7 +40,7 @@ var Gather = {
                 var html = Buffer.concat(buffers).toString();
                 parse_f(html, callback);
             }).on('error', function(err) {
-                clearTimeout(response_timeout);
+//                clearTimeout(response_timeout);
                 console.error(err);
             });
         });

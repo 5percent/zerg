@@ -27,11 +27,17 @@ var _hatchery = {
             },
             dominate_mf: function(options){
                 var mf = new MineralField(options);
-                var mf_location = mf.get_location()
-                var drone = this.create_drone(mf_location, function(data){
-                    mf.update(data);
-                });
-                drone.work();
+                var hatchery = this;
+
+                var gather_one_page = function(mf){
+                    var mf_location = mf.get_location()
+                    var drone = hatchery.create_drone(mf_location, function(data){
+                        mf.update(data);
+                        gather_one_page(mf);
+                    });
+                    drone.work();
+                }
+                gather_one_page(mf);
 
                 return mf;
             },

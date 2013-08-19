@@ -1,31 +1,55 @@
 var $ = require("jQuery");
 var Hatchery = require("./Hatchery");
+var Store = require("./Store");
 
 var MineralField = function(options){
     var _mf = $.extend({
         type          : "taobao_shop",
         shop_id       : "",
+        state         : "idle",
         page          : 1, 
-        items_count   : 0,
-        items_todo    : [],
+        items_num     : 0,
+        items_list    : [],
     },options);
 
     _mf.get_location = function(){
-        var page_str = this.page>1? "&pageNum="+this.page : "";
+        if (this.state == "gathered")
+            return false;
+
+        var page_str = this.page > 1? "&pageNum="+this.page : "";
         return {
             hostname : "shop"+this.shop_id+".taobao.com",
             path     : "/?search=y" + page_str,
             type     : this.type
         };
-    },
+    };
     _mf.update = function(data){
-        this.items_count = parseInt(data.items_num);
-        this.items_todo = this.items_todo.concat(data.id_list);
-        if(this.items_todo.length < this.items_count)
-            this.page++;
-
-        console.log(this);
+        this.items_num = parseInt(data.items_num);
+        this.items_list = this.items_list.concat(data.id_list);
+        if(this.items_num < 0){
+            this.state = 'error';
+        }
+        else{
+            if(this.items_list.length < this.items_num){
+                this.page++;
+                this.state = 'occupied';
+            }
+            else{
+                this.state = 'gathered';
+                this.store();
+            }
+        }
+    };
+    _mf.store = function(){
+        var mf = this;
+        var data = [{
+            shop_id : mf.shop_id,
+            items_num : mf.items_num,
+            items_list : mf.items_list,
+        }];
+        Store.write('minerals', data);
     }
+
 
 
     return _mf;
