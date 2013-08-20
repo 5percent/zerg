@@ -51,7 +51,7 @@ var _hatchery = {
                             shop_id : shop_id
                         });
                     }
-                }, 1000);
+                }, 1000 * 180);
             }
         };
     },
