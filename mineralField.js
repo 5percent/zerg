@@ -1,6 +1,6 @@
 var $ = require("jQuery");
 var Hatchery = require("./Hatchery");
-var Store = require("./Store");
+var Storage = require("./Storage");
 
 var MineralField = function(options){
     var _mf = $.extend({
@@ -42,12 +42,14 @@ var MineralField = function(options){
     };
     _mf.store = function(){
         var mf = this;
+        var date = new Date();
         var data = [{
-            shop_id : mf.shop_id,
-            items_num : mf.items_num,
+            shop_id    : mf.shop_id,
+            items_num  : mf.items_num,
             items_list : mf.items_list,
+            date       : date.toString()
         }];
-        Store.write('minerals', data);
+        Storage.write('minerals', data);
     }
 
 

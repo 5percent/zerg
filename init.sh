@@ -6,4 +6,5 @@ npm jsdom
 npm xmlhttprequest
 npm jQuery
 npm mongodb
+npm mongoskin
 npm express 
