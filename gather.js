@@ -22,8 +22,15 @@ var Gather = {
             method : "GET"
         }, options);
 
+        var gather = this;
         var req = Http.request(options, function(res){
             console.log(options['hostname'] + options['path'] + ' : ' + res.statusCode);
+            if (res.statusCode == '302'){
+                var redirect_url = res.headers.location;
+                req.end();
+                gather.get(parse_f, {url:redirect_url}, callback)
+                return;
+            }
 
 //            timeout = setTimeout(function() {
 //                timeout = null;

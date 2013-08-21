@@ -31,6 +31,9 @@ var _hatchery = {
 
                 var gather_one_page = function(mf){
                     var mf_location = mf.get_location()
+                    if (!mf_location)
+                        return false;
+
                     var drone = hatchery.create_drone(mf_location, function(data){
                         mf.update(data);
                         gather_one_page(mf);
@@ -51,7 +54,7 @@ var _hatchery = {
                             shop_id : shop_id
                         });
                     }
-                }, 1000 * 180);
+                }, 1000 /*  * 120*/);
             }
         };
     },

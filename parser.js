@@ -3,8 +3,8 @@ var $ = require("jQuery");
 var Parser = {
     parse_taobao_shop : function(html, callback){
         var id_list = [];
-        $(html).find('.shop-hesper-bd a.item-name[href*="item.taobao.com"]').each(function(){
-            var href = this.href;
+        $(html).find('.shop-hesper-bd a[href*="item.taobao.com"] img , .shop-hesper-bd a[href*="detail.tmall.com"] img').each(function(){
+            var href = $(this).parent().attr("href");
             var start = href.indexOf("id=") + 3;
             var end = href.indexOf("&", start);
             if(end == -1)

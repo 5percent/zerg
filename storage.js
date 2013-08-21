@@ -45,7 +45,7 @@ var Storage = {
     }
 };
 
-Storage.readOne('minerals', {shop_id:"1580297"}, function(v){console.log(v)});
-Storage.read('minerals', {shop_id:"1580297"}, function(v){console.log(v)});
+//Storage.readOne('minerals', {shop_id:"1580297"}, function(v){console.log(v)});
+//Storage.read('minerals', {shop_id:"1580297"}, function(v){console.log(v)});
 
 module.exports = Storage;

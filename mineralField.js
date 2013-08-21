@@ -13,7 +13,7 @@ var MineralField = function(options){
     },options);
 
     _mf.get_location = function(){
-        if (this.state == "gathered")
+        if (this.state == "gathered" || this.state == "error")
             return false;
 
         var page_str = this.page > 1? "&pageNum="+this.page : "";
@@ -26,6 +26,7 @@ var MineralField = function(options){
     _mf.update = function(data){
         this.items_num = parseInt(data.items_num);
         this.items_list = this.items_list.concat(data.id_list);
+        console.log(this.items_num + " || " + this.items_list.length);
         if(this.items_num < 0){
             this.state = 'error';
         }
