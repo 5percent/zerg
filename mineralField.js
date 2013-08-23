@@ -45,7 +45,8 @@ var MineralField = function(options){
         var mf = this;
         var date = new Date();
         var data = [{
-            shop_id    : mf.shop_id,
+            shop_id    : parseInt(mf.shop_id),
+            state      : 'gathered',
             items_num  : mf.items_num,
             items_list : mf.items_list,
             date       : date.toString()
