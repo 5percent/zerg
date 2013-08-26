@@ -37,7 +37,7 @@ var MineralField = function(options){
             }
             else{
                 this.state = 'gathered';
-                this.store();
+//                this.store();
             }
         }
     };
