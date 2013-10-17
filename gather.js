@@ -1,4 +1,4 @@
-var Config = require("./Config")
+var Config = require("./config")
 var Http = require("http");
 var Url = require("url");
 var $ = require("jQuery");
@@ -24,9 +24,10 @@ var Gather = {
         }, options);
 
         var gather = this;
+        console.log("gathering taobao shop...");
         var req = Http.request(options, function(res){
             console.log(options['hostname'] + options['path'] + ' : ' + res.statusCode);
-            if (res.statusCode == '302'){
+            if (res.statusCode == '302' || res.statusCode == '301'){
                 var redirect_url = res.headers.location;
                 req.end();
                 gather.get(parse_f, {url:redirect_url}, callback)
@@ -47,16 +48,25 @@ var Gather = {
                 buffers.push(b);
             }).on('end', function(){
                 if (options['hostname'].indexOf("taobao") != -1 || options['hostname'].indexOf("tmall") != -1){
-                    var iconv = new Iconv('GBK', 'UTF-8');
-                    var html = iconv.convert(Buffer.concat(buffers)).toString();
+                    try{
+                        var iconv = new Iconv('GBK', 'UTF-8');
+                        var html = iconv.convert(Buffer.concat(buffers)).toString();
+                    }
+                    catch(e){
+                        console.log(e);
+                        return;
+                    }
+                    
                 }
                 else
                     var html = Buffer.concat(buffers).toString();
+
                 parse_f(html, callback);
-            }).on('error', function(err) {
+            })
+        });
+        req.on('error', function(err) {
 //                clearTimeout(response_timeout);
-                console.error(err);
-            });
+            console.error(err);
         });
         req.end();
     }

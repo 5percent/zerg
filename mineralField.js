@@ -1,6 +1,6 @@
 var $ = require("jQuery");
-var Hatchery = require("./Hatchery");
-var Storage = require("./Storage");
+var Hatchery = require("./hatchery");
+var Storage = require("./storage");
 
 var MineralField = function(options){
     var _mf = $.extend({
@@ -35,6 +35,7 @@ var MineralField = function(options){
                 this.items_num = this.items_list.length + 1;
                 this.state = 'occupied';
                 this.page++;
+                console.log(this.page);
             }
             else{
                 if (this.items_list.length > 0) {
