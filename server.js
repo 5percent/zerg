@@ -4,28 +4,28 @@ var Hatchery = require("./hatchery");
 var Storage = require("./storage");
 var Config = require("./config");
 
-//var app = Express();
-//app.listen(9081);
-//
-//app.get("/new/shop", function(req, res){
-//    var id = req.param("id");
-//    if (id)  { 
-//        var hatchery = new Hatchery(); 
-//        hatchery.tasks.shop.push(id);
-//        console.log(hatchery.tasks.shop);
-//        res.send("recived");
-//    }
-//    else {
-//        res.send("wrong id");
-//    }
-//});
-//
-//app.get("/query/shop", function(req, res){
-//    var id = parseInt(req.param("id"));
-//    Storage.readOne('minerals', {shop_id:id}, function(data){
-//        res.send(data);
-//    });
-//});
+var app = Express();
+app.listen(9081);
+
+app.get("/new/shop", function(req, res){
+    var id = req.param("id");
+    if (id)  { 
+        var hatchery = new Hatchery(); 
+        hatchery.tasks.shop.push(id);
+        console.log(hatchery.tasks.shop);
+        res.send("recived");
+    }
+    else {
+        res.send("wrong id");
+    }
+});
+
+app.get("/query/shop", function(req, res){
+    var id = parseInt(req.param("id"));
+    Storage.readOne('minerals', {shop_id:id}, function(data){
+        res.send(data);
+    });
+});
 
 var get_task = function(){
     var get_options = {
@@ -105,4 +105,4 @@ var post_item = function(){
     });
 
 };
-setInterval(post_item, 1000 * 10);
+//setInterval(post_item, 1000 * 10);

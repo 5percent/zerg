@@ -15,7 +15,7 @@ var Parser = {
         });
 
         var items_num = $.trim($(html).find(".search-result span").text());
-        if (!parseInt(items_num) && $(html).find("a:contains('下一页').disable").get(0)==undefined ) {
+        if (!parseInt(items_num) && $(html).find("a:contains('下一页')").get(0)!=undefined && $(html).find("a:contains('下一页').disable").get(0)==undefined ) {
             var has_more = true;
         }
         else 
@@ -30,8 +30,9 @@ var Parser = {
     },
     parse_taobao_item_image : function(html, callback){
         var image_url_list = [];
-        $(html).find('.tb-pic a img').each(function(){
-            var url = this.src.replace(/\_[0-9]+x[0-9]+\.(jpg|png|gif)/, "");
+        $(html).find('.tb-thumb .tb-pic a img').each(function(){
+            var src = $(this).attr("data-src") || $(this).attr("src");
+            var url = src.replace(/\_[0-9]+x[0-9]+\.(jpg|png|gif)/, "");
             image_url_list.push(url);
         });
 
